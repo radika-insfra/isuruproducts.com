@@ -4,36 +4,35 @@ const products = [
         id: 1,
         name: "Dehydrated Jackfruit",
         category: "Dehydrated Food",
+        desc: "Premium quality naturally dried jackfruit. A pure, preservative-free vegan meat substitute perfect for curries.",
         image: "images/jackfruit.png"
     },
     {
         id: 2,
         name: "Golden Tropic Mix",
         category: "Value Added",
+        desc: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
         image: "images/jackfruit.png"
     },
     {
         id: 3,
         name: "Kurakkan Flour",
-        category: "Healthy Grains",
+        category: "Grains",
+        desc: "100% pure finger millet flour. Rich in fiber and minerals, ideal for Rotti, Pittu, and healthy baking.",
         image: "images/kurakkan.png"
     },
     {
         id: 4,
         name: "Premium Ceylon Tea",
         category: "Beverages",
+        desc: "Hand-picked tea leaves from the misty hills of Sri Lanka. Experience the true aroma of Ceylon tea.",
         image: "images/tea.png"
     },
     {
         id: 5,
         name: "Traditional Sweets",
-        category: "Sweets",
-        image: "images/sweets.png"
-    },
-    {
-        id: 6,
-        name: "Thala Guli",
-        category: "Sweets",
+        category: "Confectionery",
+        desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
         image: "images/sweets.png"
     }
 ];
@@ -43,14 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initLenis();
     loadProducts();
     initAnimations();
-    initCursor();
-    initMenu();
+    initMobileMenu();
 });
 
-// Smooth Scroll (Lenis)
-let lenis;
+// 1. Smooth Scroll (Lenis)
 function initLenis() {
-    lenis = new Lenis({
+    const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smooth: true,
@@ -65,167 +62,102 @@ function initLenis() {
     requestAnimationFrame(raf);
 }
 
-// Animations (GSAP)
+// 2. Load Products (Alternating Layout)
+function loadProducts() {
+    const feed = document.getElementById('product-feed');
+    const phoneNumber = "94771234567";
+
+    products.forEach((product, index) => {
+        const isReverse = index % 2 !== 0; // Alternate every other item
+        const row = document.createElement('div');
+        row.className = `product-row ${isReverse ? 'reverse' : ''}`;
+
+        // Detailed Inquiry Message
+        const message = encodeURIComponent(`Hello Isuru Products, I would like to inquire about placing an order for: ${product.name}. Please provide details on pricing and availability.`);
+        const whatsappLink = `https://wa.me/${phoneNumber}?text=${message}`;
+
+        row.innerHTML = `
+            <div class="product-visual">
+                <img src="${product.image}" alt="${product.name}" class="reveal-img">
+            </div>
+            <div class="product-content">
+                <span class="p-cat">${product.category}</span>
+                <h3 class="p-title">${product.name}</h3>
+                <p class="p-desc">${product.desc}</p>
+                <a href="${whatsappLink}" class="btn-whatsapp" target="_blank">
+                    Request Quote <i class="ph ph-arrow-right"></i>
+                </a>
+            </div>
+        `;
+
+        feed.appendChild(row);
+    });
+}
+
+// 3. Animations (GSAP)
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero Text Reveal
-    const heroText = new SplitType('.split-text', { types: 'lines, words' });
-
+    // Hero Reveal
     const tl = gsap.timeline();
-    tl.from(heroText.words, {
+
+    tl.from('.hero-title', {
         y: 100,
         opacity: 0,
         duration: 1.5,
-        stagger: 0.05,
         ease: "power4.out",
         delay: 0.2
     })
-        .from('.hero-label', {
+        .from('.hero-meta', {
             opacity: 0,
             y: 20,
-            duration: 1,
-            ease: "power2.out"
+            duration: 1
         }, "-=1")
-        .from('.hero-desc', {
-            opacity: 0,
-            x: -20,
-            duration: 1,
+        .from('.hero-image-reveal img', {
+            scale: 1.2,
+            duration: 2,
             ease: "power2.out"
-        }, "-=0.8");
+        }, "-=1.5");
 
-    // Parallax Hero Image
-    gsap.to('.hero-img', {
-        yPercent: 30,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '.hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true
-        }
-    });
-
-    // Intro Text Animation
-    const introText = document.querySelectorAll('.intro-text p');
-    gsap.from(introText, {
-        scrollTrigger: {
-            trigger: '.intro-text',
-            start: 'top 80%',
-        },
-        y: 50,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power3.out"
-    });
-
-    // Product Stagger
-    gsap.utils.toArray('.product-card').forEach((card, i) => {
-        gsap.from(card, {
+    // Product Reveals
+    gsap.utils.toArray('.product-row').forEach(row => {
+        gsap.from(row.querySelector('.product-visual'), {
             scrollTrigger: {
-                trigger: card,
-                start: 'top 85%',
+                trigger: row,
+                start: "top 80%",
             },
-            y: 100,
+            y: 50,
             opacity: 0,
-            duration: 1.2,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        gsap.from(row.querySelector('.product-content'), {
+            scrollTrigger: {
+                trigger: row,
+                start: "top 70%",
+            },
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            delay: 0.2, // Stagger text slightly after image
             ease: "power3.out"
         });
     });
 }
 
-// Custom Cursor
-function initCursor() {
-    const dot = document.querySelector('.cursor-dot');
-    const outline = document.querySelector('.cursor-outline');
+// 4. Mobile Menu
+function initMobileMenu() {
+    const btn = document.querySelector('.mobile-menu-btn');
+    const close = document.querySelector('.close-btn');
+    const menu = document.querySelector('.mobile-menu');
+    const links = document.querySelectorAll('.mobile-links a');
 
-    window.addEventListener('mousemove', (e) => {
-        const posX = e.clientX;
-        const posY = e.clientY;
-
-        // Animate dot immediately
-        dot.style.transform = `translate(${posX}px, ${posY}px) translate(-50%, -50%)`;
-
-        // Animate outline with delay
-        outline.animate({
-            transform: `translate(${posX}px, ${posY}px) translate(-50%, -50%)`
-        }, { duration: 500, fill: 'forwards' });
-    });
-
-    // Hover effects
-    document.querySelectorAll('a, .menu-trigger, .product-card').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            outline.style.width = '60px';
-            outline.style.height = '60px';
-            outline.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-            outline.style.borderColor = 'transparent';
-        });
-
-        el.addEventListener('mouseleave', () => {
-            outline.style.width = '40px';
-            outline.style.height = '40px';
-            outline.style.backgroundColor = 'transparent';
-            outline.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-        });
-    });
-}
-
-// Menu Logic
-function initMenu() {
-    const trigger = document.querySelector('.menu-trigger');
-    const closeBtn = document.querySelector('.menu-close');
-    const overlay = document.querySelector('.menu-overlay');
-    const links = document.querySelectorAll('.main-menu a');
-
-    function toggleMenu() {
-        const isActive = overlay.classList.contains('active');
-
-        if (!isActive) {
-            overlay.classList.add('active');
-            lenis.stop(); // Stop scrolling
-        } else {
-            overlay.classList.remove('active');
-            lenis.start(); // Resume scrolling
-        }
+    function toggle() {
+        menu.classList.toggle('active');
     }
 
-    trigger.addEventListener('click', toggleMenu);
-    closeBtn.addEventListener('click', toggleMenu);
-
-    links.forEach(link => {
-        link.addEventListener('click', () => {
-            toggleMenu();
-        });
-    });
-}
-
-// Load Products
-function loadProducts() {
-    const grid = document.getElementById('product-grid');
-    const phoneNumber = "94771234567";
-
-    products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-
-        const message = encodeURIComponent(`I'm interested in the ${product.name}.`);
-        const link = `https://wa.me/${phoneNumber}?text=${message}`;
-
-        card.innerHTML = `
-            <a href="${link}" target="_blank">
-                <div class="product-image-wrapper">
-                    <img src="${product.image}" alt="${product.name}" class="product-img">
-                </div>
-                <div class="product-meta">
-                    <div class="meta-left">
-                        <span class="p-cat">${product.category}</span>
-                        <h3 class="p-title">${product.name}</h3>
-                    </div>
-                    <div class="p-btn"><i class="ph ph-arrow-up-right"></i></div>
-                </div>
-            </a>
-        `;
-
-        grid.appendChild(card);
-    });
+    btn.addEventListener('click', toggle);
+    close.addEventListener('click', toggle);
+    links.forEach(l => l.addEventListener('click', toggle));
 }
