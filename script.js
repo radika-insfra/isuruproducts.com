@@ -11,7 +11,7 @@ const products = [
         name: "Golden Tropic Mix",
         category: "Value Added",
         description: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
-        image: "images/jackfruit.png" 
+        image: "images/jackfruit.png"
     },
     {
         id: 3,
@@ -39,7 +39,7 @@ const products = [
         name: "Thala Guli",
         category: "Sweets",
         description: "Sesame balls sweetened with jaggery. A traditional healthy sweet treat.",
-        image: "images/sweets.png" 
+        image: "images/sweets.png"
     }
 ];
 
@@ -48,15 +48,44 @@ const phoneNumber = "94771234567"; // Replace with actual number
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
     setupScrollEffect();
+    setupMobileMenu();
 });
+
+function setupMobileMenu() {
+    const mobileToggle = document.querySelector('.mobile-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (mobileToggle && navLinks) {
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+
+            // Toggle icon between list and x
+            const icon = mobileToggle.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.replace('ph-list', 'ph-x');
+            } else {
+                icon.classList.replace('ph-x', 'ph-list');
+            }
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = mobileToggle.querySelector('i');
+                if (icon) icon.classList.replace('ph-x', 'ph-list');
+            });
+        });
+    }
+}
 
 function loadProducts() {
     const grid = document.getElementById('product-grid');
-    
+
     products.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
-        
+
         // WhatsApp Message Construction
         const message = encodeURIComponent(`Hi, I am interested in ${product.name}. Please provide more details about pricing and delivery.`);
         const whatsappLink = `https://wa.me/${phoneNumber}?text=${message}`;
@@ -77,14 +106,14 @@ function loadProducts() {
                 </a>
             </div>
         `;
-        
+
         grid.appendChild(card);
     });
 }
 
 function setupScrollEffect() {
     const navbar = document.querySelector('.navbar');
-    
+
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
@@ -92,7 +121,7 @@ function setupScrollEffect() {
             navbar.classList.remove('scrolled');
         }
     });
-    
+
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
