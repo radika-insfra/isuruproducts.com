@@ -2,15 +2,15 @@
 const products = [
     {
         id: 1,
-        name: "Dehydrated Jackfruit",
-        category: "Dehydrated Food",
+        name: "Jackfruit",
+        category: "Dehydrated",
         desc: "Premium quality naturally dried jackfruit. A pure, preservative-free vegan meat substitute perfect for curries.",
         image: "images/jackfruit.png"
     },
     {
         id: 2,
-        name: "Golden Tropic Mix",
-        category: "Value Added",
+        name: "Tropic Mix",
+        category: "Snacks",
         desc: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
         image: "images/jackfruit.png"
     },
@@ -23,15 +23,15 @@ const products = [
     },
     {
         id: 4,
-        name: "Premium Ceylon Tea",
-        category: "Beverages",
+        name: "Ceylon Tea",
+        category: "Estate",
         desc: "Hand-picked tea leaves from the misty hills of Sri Lanka. Experience the true aroma of Ceylon tea.",
         image: "images/tea.png"
     },
     {
         id: 5,
-        name: "Traditional Sweets",
-        category: "Confectionery",
+        name: "Rulan Aluwa",
+        category: "Sweets",
         desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
         image: "images/sweets.png"
     }
@@ -40,12 +40,12 @@ const products = [
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     initLenis();
-    loadProducts();
+    injectProducts();
     initAnimations();
-    initMobileMenu();
+    initMenu();
 });
 
-// 1. Smooth Scroll (Lenis)
+// 1. Smooth Scroll
 function initLenis() {
     const lenis = new Lenis({
         duration: 1.2,
@@ -59,105 +59,110 @@ function initLenis() {
         requestAnimationFrame(raf);
     }
 
+    // Update Scroll Progress Bar
+    lenis.on('scroll', ({ progress }) => {
+        const bar = document.querySelector('.bar');
+        if (bar) bar.style.height = `${progress * 100}%`;
+    });
+
     requestAnimationFrame(raf);
 }
 
-// 2. Load Products (Alternating Layout)
-function loadProducts() {
-    const feed = document.getElementById('product-feed');
+// 2. Inject Products (Sticky Stack Structure)
+function injectProducts() {
+    const container = document.getElementById('product-stack');
     const phoneNumber = "94771234567";
+    const alignments = ['align-left', 'align-center', 'align-right'];
 
     products.forEach((product, index) => {
-        const isReverse = index % 2 !== 0; // Alternate every other item
-        const row = document.createElement('div');
-        row.className = `product-row ${isReverse ? 'reverse' : ''}`;
+        const alignClass = alignments[index % alignments.length]; // Cycle alignments
+        const section = document.createElement('section');
+        section.className = `product-section ${alignClass}`;
 
-        // Detailed Inquiry Message
-        const message = encodeURIComponent(`Hello Isuru Products, I would like to inquire about placing an order for: ${product.name}. Please provide details on pricing and availability.`);
-        const whatsappLink = `https://wa.me/${phoneNumber}?text=${message}`;
+        // Quote Message
+        const message = encodeURIComponent(`Hi, I'm interested in ordering ${product.name}.`);
+        const link = `https://wa.me/${phoneNumber}?text=${message}`;
 
-        row.innerHTML = `
-            <div class="product-visual">
-                <img src="${product.image}" alt="${product.name}" class="reveal-img">
+        section.innerHTML = `
+            <div class="product-bg">
+                <img src="${product.image}" alt="${product.name}" class="parallax-img">
             </div>
-            <div class="product-content">
+            <div class="product-card">
+                <span class="p-number">0${index + 1}</span>
                 <span class="p-cat">${product.category}</span>
-                <h3 class="p-title">${product.name}</h3>
+                <h2>${product.name}</h2>
                 <p class="p-desc">${product.desc}</p>
-                <a href="${whatsappLink}" class="btn-whatsapp" target="_blank">
-                    Request Quote <i class="ph ph-arrow-right"></i>
+                <a href="${link}" class="btn-whatsapp-full" target="_blank">
+                    Request Quote <i class="ph ph-whatsapp-logo"></i>
                 </a>
             </div>
         `;
 
-        feed.appendChild(row);
+        container.appendChild(section);
     });
 }
 
-// 3. Animations (GSAP)
+// 3. Animations & Parallax
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero Reveal
-    const tl = gsap.timeline();
+    // Hero Parallax
+    gsap.to('.hero-bg img', {
+        yPercent: 30,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.hero-section',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+        }
+    });
 
-    tl.from('.hero-title', {
-        y: 100,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power4.out",
-        delay: 0.2
-    })
-        .from('.hero-meta', {
-            opacity: 0,
-            y: 20,
-            duration: 1
-        }, "-=1")
-        .from('.hero-image-reveal img', {
-            scale: 1.2,
-            duration: 2,
-            ease: "power2.out"
-        }, "-=1.5");
+    // Product Section Animations
+    const sections = document.querySelectorAll('.product-section');
+    sections.forEach((section) => {
 
-    // Product Reveals
-    gsap.utils.toArray('.product-row').forEach(row => {
-        gsap.from(row.querySelector('.product-visual'), {
-            scrollTrigger: {
-                trigger: row,
-                start: "top 80%",
-            },
-            y: 50,
-            opacity: 0,
+        // Image Parallax (Background moves slower)
+        const bgImg = section.querySelector('.parallax-img');
+        gsap.fromTo(bgImg,
+            { yPercent: -10, scale: 1.1 },
+            {
+                yPercent: 10,
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
+            }
+        );
+
+        // Content Card Reveal (Slide up + Fade)
+        const card = section.querySelector('.product-card');
+        gsap.to(card, {
+            y: 0,
+            opacity: 1,
             duration: 1,
-            ease: "power3.out"
-        });
-
-        gsap.from(row.querySelector('.product-content'), {
+            ease: "power3.out",
             scrollTrigger: {
-                trigger: row,
-                start: "top 70%",
-            },
-            y: 30,
-            opacity: 0,
-            duration: 1,
-            delay: 0.2, // Stagger text slightly after image
-            ease: "power3.out"
+                trigger: section,
+                start: "top 60%", // Trigger when section is 60% up viewport
+                toggleActions: "play none none reverse"
+            }
         });
     });
 }
 
-// 4. Mobile Menu
-function initMobileMenu() {
-    const btn = document.querySelector('.mobile-menu-btn');
-    const close = document.querySelector('.close-btn');
-    const menu = document.querySelector('.mobile-menu');
-    const links = document.querySelectorAll('.mobile-links a');
+// 4. Menu Logic
+function initMenu() {
+    const trigger = document.querySelector('.menu-trigger');
+    const close = document.querySelector('.menu-close');
+    const overlay = document.querySelector('.menu-overlay');
 
     function toggle() {
-        menu.classList.toggle('active');
+        overlay.classList.toggle('active');
     }
 
-    btn.addEventListener('click', toggle);
+    trigger.addEventListener('click', toggle);
     close.addEventListener('click', toggle);
-    links.forEach(l => l.addEventListener('click', toggle));
 }
