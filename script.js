@@ -2,38 +2,37 @@
 const products = [
     {
         id: 1,
-        name: "Dehydrated Jackfruit",
-        category: "Dehydrated Food",
+        name: "Jackfruit",
+        category: "Dehydrated",
+        desc: "Premium quality naturally dried jackfruit. A pure, preservative-free vegan meat substitute perfect for curries.",
         image: "images/jackfruit.png"
     },
     {
         id: 2,
-        name: "Golden Tropic Mix",
-        category: "Value Added",
+        name: "Tropic Mix",
+        category: "Snacks",
+        desc: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
         image: "images/jackfruit.png"
     },
     {
         id: 3,
         name: "Kurakkan Flour",
-        category: "Healthy Grains",
+        category: "Grains",
+        desc: "100% pure finger millet flour. Rich in fiber and minerals, ideal for Rotti, Pittu, and healthy baking.",
         image: "images/kurakkan.png"
     },
     {
         id: 4,
-        name: "Premium Ceylon Tea",
-        category: "Beverages",
+        name: "Ceylon Tea",
+        category: "Estate",
+        desc: "Hand-picked tea leaves from the misty hills of Sri Lanka. Experience the true aroma of Ceylon tea.",
         image: "images/tea.png"
     },
     {
         id: 5,
-        name: "Traditional Sweets",
+        name: "Rulan Aluwa",
         category: "Sweets",
-        image: "images/sweets.png"
-    },
-    {
-        id: 6,
-        name: "Thala Guli",
-        category: "Sweets",
+        desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
         image: "images/sweets.png"
     }
 ];
@@ -41,16 +40,14 @@ const products = [
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     initLenis();
-    loadProducts();
+    injectProducts();
     initAnimations();
-    initCursor();
     initMenu();
 });
 
-// Smooth Scroll (Lenis)
-let lenis;
+// 1. Smooth Scroll
 function initLenis() {
-    lenis = new Lenis({
+    const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smooth: true,
@@ -62,170 +59,110 @@ function initLenis() {
         requestAnimationFrame(raf);
     }
 
+    // Update Scroll Progress Bar
+    lenis.on('scroll', ({ progress }) => {
+        const bar = document.querySelector('.bar');
+        if (bar) bar.style.height = `${progress * 100}%`;
+    });
+
     requestAnimationFrame(raf);
 }
 
-// Animations (GSAP)
+// 2. Inject Products (Sticky Stack Structure)
+function injectProducts() {
+    const container = document.getElementById('product-stack');
+    const phoneNumber = "94771234567";
+    const alignments = ['align-left', 'align-center', 'align-right'];
+
+    products.forEach((product, index) => {
+        const alignClass = alignments[index % alignments.length]; // Cycle alignments
+        const section = document.createElement('section');
+        section.className = `product-section ${alignClass}`;
+
+        // Quote Message
+        const message = encodeURIComponent(`Hi, I'm interested in ordering ${product.name}.`);
+        const link = `https://wa.me/${phoneNumber}?text=${message}`;
+
+        section.innerHTML = `
+            <div class="product-bg">
+                <img src="${product.image}" alt="${product.name}" class="parallax-img">
+            </div>
+            <div class="product-card">
+                <span class="p-number">0${index + 1}</span>
+                <span class="p-cat">${product.category}</span>
+                <h2>${product.name}</h2>
+                <p class="p-desc">${product.desc}</p>
+                <a href="${link}" class="btn-whatsapp-full" target="_blank">
+                    Request Quote <i class="ph ph-whatsapp-logo"></i>
+                </a>
+            </div>
+        `;
+
+        container.appendChild(section);
+    });
+}
+
+// 3. Animations & Parallax
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero Text Reveal
-    const heroText = new SplitType('.split-text', { types: 'lines, words' });
-
-    const tl = gsap.timeline();
-    tl.from(heroText.words, {
-        y: 100,
-        opacity: 0,
-        duration: 1.5,
-        stagger: 0.05,
-        ease: "power4.out",
-        delay: 0.2
-    })
-        .from('.hero-label', {
-            opacity: 0,
-            y: 20,
-            duration: 1,
-            ease: "power2.out"
-        }, "-=1")
-        .from('.hero-desc', {
-            opacity: 0,
-            x: -20,
-            duration: 1,
-            ease: "power2.out"
-        }, "-=0.8");
-
-    // Parallax Hero Image
-    gsap.to('.hero-img', {
+    // Hero Parallax
+    gsap.to('.hero-bg img', {
         yPercent: 30,
         ease: 'none',
         scrollTrigger: {
-            trigger: '.hero',
+            trigger: '.hero-section',
             start: 'top top',
             end: 'bottom top',
             scrub: true
         }
     });
 
-    // Intro Text Animation
-    const introText = document.querySelectorAll('.intro-text p');
-    gsap.from(introText, {
-        scrollTrigger: {
-            trigger: '.intro-text',
-            start: 'top 80%',
-        },
-        y: 50,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power3.out"
-    });
+    // Product Section Animations
+    const sections = document.querySelectorAll('.product-section');
+    sections.forEach((section) => {
 
-    // Product Stagger
-    gsap.utils.toArray('.product-card').forEach((card, i) => {
-        gsap.from(card, {
+        // Image Parallax (Background moves slower)
+        const bgImg = section.querySelector('.parallax-img');
+        gsap.fromTo(bgImg,
+            { yPercent: -10, scale: 1.1 },
+            {
+                yPercent: 10,
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
+            }
+        );
+
+        // Content Card Reveal (Slide up + Fade)
+        const card = section.querySelector('.product-card');
+        gsap.to(card, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
             scrollTrigger: {
-                trigger: card,
-                start: 'top 85%',
-            },
-            y: 100,
-            opacity: 0,
-            duration: 1.2,
-            ease: "power3.out"
+                trigger: section,
+                start: "top 60%", // Trigger when section is 60% up viewport
+                toggleActions: "play none none reverse"
+            }
         });
     });
 }
 
-// Custom Cursor
-function initCursor() {
-    const dot = document.querySelector('.cursor-dot');
-    const outline = document.querySelector('.cursor-outline');
-
-    window.addEventListener('mousemove', (e) => {
-        const posX = e.clientX;
-        const posY = e.clientY;
-
-        // Animate dot immediately
-        dot.style.transform = `translate(${posX}px, ${posY}px) translate(-50%, -50%)`;
-
-        // Animate outline with delay
-        outline.animate({
-            transform: `translate(${posX}px, ${posY}px) translate(-50%, -50%)`
-        }, { duration: 500, fill: 'forwards' });
-    });
-
-    // Hover effects
-    document.querySelectorAll('a, .menu-trigger, .product-card').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            outline.style.width = '60px';
-            outline.style.height = '60px';
-            outline.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-            outline.style.borderColor = 'transparent';
-        });
-
-        el.addEventListener('mouseleave', () => {
-            outline.style.width = '40px';
-            outline.style.height = '40px';
-            outline.style.backgroundColor = 'transparent';
-            outline.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-        });
-    });
-}
-
-// Menu Logic
+// 4. Menu Logic
 function initMenu() {
     const trigger = document.querySelector('.menu-trigger');
-    const closeBtn = document.querySelector('.menu-close');
+    const close = document.querySelector('.menu-close');
     const overlay = document.querySelector('.menu-overlay');
-    const links = document.querySelectorAll('.main-menu a');
 
-    function toggleMenu() {
-        const isActive = overlay.classList.contains('active');
-
-        if (!isActive) {
-            overlay.classList.add('active');
-            lenis.stop(); // Stop scrolling
-        } else {
-            overlay.classList.remove('active');
-            lenis.start(); // Resume scrolling
-        }
+    function toggle() {
+        overlay.classList.toggle('active');
     }
 
-    trigger.addEventListener('click', toggleMenu);
-    closeBtn.addEventListener('click', toggleMenu);
-
-    links.forEach(link => {
-        link.addEventListener('click', () => {
-            toggleMenu();
-        });
-    });
-}
-
-// Load Products
-function loadProducts() {
-    const grid = document.getElementById('product-grid');
-    const phoneNumber = "94771234567";
-
-    products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-
-        const message = encodeURIComponent(`I'm interested in the ${product.name}.`);
-        const link = `https://wa.me/${phoneNumber}?text=${message}`;
-
-        card.innerHTML = `
-            <a href="${link}" target="_blank">
-                <div class="product-image-wrapper">
-                    <img src="${product.image}" alt="${product.name}" class="product-img">
-                </div>
-                <div class="product-meta">
-                    <div class="meta-left">
-                        <span class="p-cat">${product.category}</span>
-                        <h3 class="p-title">${product.name}</h3>
-                    </div>
-                    <div class="p-btn"><i class="ph ph-arrow-up-right"></i></div>
-                </div>
-            </a>
-        `;
-
-        grid.appendChild(card);
-    });
+    trigger.addEventListener('click', toggle);
+    close.addEventListener('click', toggle);
 }
