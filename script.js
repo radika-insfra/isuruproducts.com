@@ -1,137 +1,231 @@
+// Data
 const products = [
     {
         id: 1,
         name: "Dehydrated Jackfruit",
         category: "Dehydrated Food",
-        description: "Premium quality naturally dried jackfruit. A pure, preservative-free vegan meat substitute perfect for curries.",
         image: "images/jackfruit.png"
     },
     {
         id: 2,
         name: "Golden Tropic Mix",
         category: "Value Added",
-        description: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
         image: "images/jackfruit.png"
     },
     {
         id: 3,
         name: "Kurakkan Flour",
         category: "Healthy Grains",
-        description: "100% pure finger millet flour. Rich in fiber and minerals, ideal for Rotti, Pittu, and healthy baking.",
         image: "images/kurakkan.png"
     },
     {
         id: 4,
         name: "Premium Ceylon Tea",
         category: "Beverages",
-        description: "Hand-picked tea leaves from the misty hills of Sri Lanka. Experience the true aroma of Ceylon tea.",
         image: "images/tea.png"
     },
     {
         id: 5,
-        name: "Traditional Sweets (Rulan)",
+        name: "Traditional Sweets",
         category: "Sweets",
-        description: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight.",
         image: "images/sweets.png"
     },
     {
         id: 6,
         name: "Thala Guli",
         category: "Sweets",
-        description: "Sesame balls sweetened with jaggery. A traditional healthy sweet treat.",
         image: "images/sweets.png"
     }
 ];
 
-const phoneNumber = "94771234567"; // Replace with actual number
-
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    initLenis();
     loadProducts();
-    setupScrollEffect();
-    setupMobileMenu();
+    initAnimations();
+    initCursor();
+    initMenu();
 });
 
-function setupMobileMenu() {
-    const mobileToggle = document.querySelector('.mobile-toggle');
-    const navLinks = document.querySelector('.nav-links');
+// Smooth Scroll (Lenis)
+let lenis;
+function initLenis() {
+    lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+        direction: 'vertical',
+    });
 
-    if (mobileToggle && navLinks) {
-        mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-
-            // Toggle icon between list and x
-            const icon = mobileToggle.querySelector('i');
-            if (navLinks.classList.contains('active')) {
-                icon.classList.replace('ph-list', 'ph-x');
-            } else {
-                icon.classList.replace('ph-x', 'ph-list');
-            }
-        });
-
-        // Close menu when clicking a link
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                const icon = mobileToggle.querySelector('i');
-                if (icon) icon.classList.replace('ph-x', 'ph-list');
-            });
-        });
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
     }
+
+    requestAnimationFrame(raf);
 }
 
+// Animations (GSAP)
+function initAnimations() {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero Text Reveal
+    const heroText = new SplitType('.split-text', { types: 'lines, words' });
+
+    const tl = gsap.timeline();
+    tl.from(heroText.words, {
+        y: 100,
+        opacity: 0,
+        duration: 1.5,
+        stagger: 0.05,
+        ease: "power4.out",
+        delay: 0.2
+    })
+        .from('.hero-label', {
+            opacity: 0,
+            y: 20,
+            duration: 1,
+            ease: "power2.out"
+        }, "-=1")
+        .from('.hero-desc', {
+            opacity: 0,
+            x: -20,
+            duration: 1,
+            ease: "power2.out"
+        }, "-=0.8");
+
+    // Parallax Hero Image
+    gsap.to('.hero-img', {
+        yPercent: 30,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+        }
+    });
+
+    // Intro Text Animation
+    const introText = document.querySelectorAll('.intro-text p');
+    gsap.from(introText, {
+        scrollTrigger: {
+            trigger: '.intro-text',
+            start: 'top 80%',
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out"
+    });
+
+    // Product Stagger
+    gsap.utils.toArray('.product-card').forEach((card, i) => {
+        gsap.from(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+            },
+            y: 100,
+            opacity: 0,
+            duration: 1.2,
+            ease: "power3.out"
+        });
+    });
+}
+
+// Custom Cursor
+function initCursor() {
+    const dot = document.querySelector('.cursor-dot');
+    const outline = document.querySelector('.cursor-outline');
+
+    window.addEventListener('mousemove', (e) => {
+        const posX = e.clientX;
+        const posY = e.clientY;
+
+        // Animate dot immediately
+        dot.style.transform = `translate(${posX}px, ${posY}px) translate(-50%, -50%)`;
+
+        // Animate outline with delay
+        outline.animate({
+            transform: `translate(${posX}px, ${posY}px) translate(-50%, -50%)`
+        }, { duration: 500, fill: 'forwards' });
+    });
+
+    // Hover effects
+    document.querySelectorAll('a, .menu-trigger, .product-card').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            outline.style.width = '60px';
+            outline.style.height = '60px';
+            outline.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+            outline.style.borderColor = 'transparent';
+        });
+
+        el.addEventListener('mouseleave', () => {
+            outline.style.width = '40px';
+            outline.style.height = '40px';
+            outline.style.backgroundColor = 'transparent';
+            outline.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        });
+    });
+}
+
+// Menu Logic
+function initMenu() {
+    const trigger = document.querySelector('.menu-trigger');
+    const closeBtn = document.querySelector('.menu-close');
+    const overlay = document.querySelector('.menu-overlay');
+    const links = document.querySelectorAll('.main-menu a');
+
+    function toggleMenu() {
+        const isActive = overlay.classList.contains('active');
+
+        if (!isActive) {
+            overlay.classList.add('active');
+            lenis.stop(); // Stop scrolling
+        } else {
+            overlay.classList.remove('active');
+            lenis.start(); // Resume scrolling
+        }
+    }
+
+    trigger.addEventListener('click', toggleMenu);
+    closeBtn.addEventListener('click', toggleMenu);
+
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            toggleMenu();
+        });
+    });
+}
+
+// Load Products
 function loadProducts() {
     const grid = document.getElementById('product-grid');
+    const phoneNumber = "94771234567";
 
     products.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
 
-        // WhatsApp Message Construction
-        const message = encodeURIComponent(`Hi, I am interested in ${product.name}. Please provide more details about pricing and delivery.`);
-        const whatsappLink = `https://wa.me/${phoneNumber}?text=${message}`;
+        const message = encodeURIComponent(`I'm interested in the ${product.name}.`);
+        const link = `https://wa.me/${phoneNumber}?text=${message}`;
 
         card.innerHTML = `
-            <div class="product-image">
-                <img src="${product.image}" alt="${product.name}">
-                <div class="product-overlay">
-                    <a href="${whatsappLink}" target="_blank" class="btn btn-primary btn-sm">View Details</a>
+            <a href="${link}" target="_blank">
+                <div class="product-image-wrapper">
+                    <img src="${product.image}" alt="${product.name}" class="product-img">
                 </div>
-            </div>
-            <div class="product-details">
-                <span class="product-category">${product.category}</span>
-                <h3 class="product-title">${product.name}</h3>
-                <p class="product-desc">${product.description}</p>
-                <a href="${whatsappLink}" target="_blank" class="btn btn-whatsapp">
-                    <i class="ph ph-whatsapp-logo"></i> Order on WhatsApp
-                </a>
-            </div>
+                <div class="product-meta">
+                    <div class="meta-left">
+                        <span class="p-cat">${product.category}</span>
+                        <h3 class="p-title">${product.name}</h3>
+                    </div>
+                    <div class="p-btn"><i class="ph ph-arrow-up-right"></i></div>
+                </div>
+            </a>
         `;
 
         grid.appendChild(card);
-    });
-}
-
-function setupScrollEffect() {
-    const navbar = document.querySelector('.navbar');
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
     });
 }

@@ -1,155 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Isuru Products - Premium Dehydrated Foods, Spices, and Sweets from Sri Lanka.">
     <title>Isuru Products | Essence of Nature</title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap"
+        rel="stylesheet">
+
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    
+
+    <div class="noise"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="#" class="logo">Isuru<span>Products</span></a>
-            <ul class="nav-links">
-                <li><a href="#home" class="active">Home</a></li>
-                <li><a href="#about">Our Story</a></li>
-                <li><a href="#products">Products</a></li>
-            </ul>
-            <a href="#products" class="btn btn-primary">Shop Now</a>
-            <div class="mobile-toggle">
-                <i class="ph ph-list"></i>
+            <a href="#" class="logo">ISURU<span>.</span></a>
+            <div class="nav-right">
+                <a href="#products" class="btn-text">Shop Collection</a>
+                <div class="menu-trigger">
+                    <span>Menu</span>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-bg">
-            <img src="images/hero-bg.png" alt="Traditional Sri Lankan Spices">
-            <div class="overlay"></div>
-        </div>
-        <div class="container hero-content">
-            <h1 class="fade-in-up">Taste the Pure <br><em>Essence of Nature</em></h1>
-            <p class="fade-in-up delay-1">Premium dehydrated foods, healthy grains, and traditional sweets crafted with care.</p>
-            <div class="hero-buttons fade-in-up delay-2">
-                <a href="#products" class="btn btn-xl btn-primary">Explore Products</a>
-                <a href="https://wa.me/94771234567" target="_blank" class="btn btn-xl btn-outline">Contact Us</a>
-            </div>
-        </div>
-        <div class="scroll-indicator">
-            <span>Scroll</span>
-            <i class="ph ph-caret-down"></i>
-        </div>
-    </section>
+    <!-- Full Screen Menu -->
+    <div class="menu-overlay">
+        <div class="menu-close"><i class="ph ph-x"></i></div>
+        <ul class="main-menu">
+            <li><a href="#home">Home</a><span class="menu-number">01</span></li>
+            <li><a href="#about">Philosophy</a><span class="menu-number">02</span></li>
+            <li><a href="#products">Collection</a><span class="menu-number">03</span></li>
+            <li><a href="#contact">Contact</a><span class="menu-number">04</span></li>
+        </ul>
+    </div>
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container grid-3">
-            <div class="feature-card">
-                <div class="icon-box">
-                    <i class="ph ph-plant"></i>
-                </div>
-                <h3>100% Natural</h3>
-                <p>No preservatives or artificial additives. Just pure goodness.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon-box">
-                    <i class="ph ph-hands-clapping"></i>
-                </div>
-                <h3>Locally Sourced</h3>
-                <p>Supporting local farmers and sustainable agriculture.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon-box">
-                    <i class="ph ph-heart"></i>
-                </div>
-                <h3>Made with Love</h3>
-                <p>Traditional recipes passed down through generations.</p>
-            </div>
-        </div>
-    </section>
+    <!-- Smooth Scroll Wrapper -->
+    <div class="wrapper">
 
-    <!-- Products Section -->
-    <section id="products" class="products">
-        <div class="container">
-            <div class="section-header">
-                <span class="subtitle">Our Collection</span>
-                <h2>Curated for <em>Wellness</em></h2>
-                <p>Explore our range of authentic Sri Lankan products.</p>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-image-container">
+                <img src="images/hero-bg.png" alt="Sri Lankan Spices" class="hero-img" data-speed="0.5">
             </div>
-
-            <div class="product-grid" id="product-grid">
-                <!-- Products will be injected via JS -->
+            <div class="hero-content">
+                <div class="hero-label">Est. 2020 — Sri Lanka</div>
+                <h1 class="split-text">Natural <br><em>Alchemy</em></h1>
+                <p class="hero-desc">Curating the finest dehydrated foods and traditional sweets. Pure, untouched, and
+                    authentic.</p>
             </div>
-        </div>
-    </section>
+            <div class="scroll-line"></div>
+        </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container grid-2">
-            <div class="about-image">
-                <img src="images/kurakkan.png" alt="Healthy Grains">
-                <div class="badge">
-                    <span>Sin.</span>
-                    <strong>2020</strong>
+        <!-- Marquee / Philosophy -->
+        <section class="marquee-section">
+            <div class="marquee-track">
+                <span>Pure Ingredients — Sustainable Sourcing — Artisan Crafted — No Preservatives — </span>
+                <span>Pure Ingredients — Sustainable Sourcing — Artisan Crafted — No Preservatives — </span>
+            </div>
+        </section>
+
+        <!-- About Intro -->
+        <section id="about" class="intro-section">
+            <div class="container">
+                <div class="intro-grid">
+                    <div class="intro-label">The Process</div>
+                    <div class="intro-text">
+                        <p class="animate-text">We believe in the wisdom of the past. Our products are not manufactured;
+                            they are crafted. From the sun-drenched jackfruit to the earth-ground Kurakkan, every item
+                            tells a story of tradition.</p>
+                        <a href="#about" class="read-more">Read Our Story</a>
+                    </div>
                 </div>
             </div>
-            <div class="about-content">
-                <span class="subtitle">Our Story</span>
-                <h2>Preserving Tradition, <br><em>One Bite at a Time</em></h2>
-                <p>At Isuru Products, we believe in the power of natural food. From sun-dried jackfruit to the finest Kurakkan flour, our mission is to bring the authentic taste of Sri Lanka to your table, healthy and uncompromised.</p>
-                <ul class="check-list">
-                    <li><i class="ph ph-check-circle"></i> Sustainable packaging</li>
-                    <li><i class="ph ph-check-circle"></i> Hygienically processed</li>
-                    <li><i class="ph ph-check-circle"></i> Island-wide delivery</li>
-                </ul>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container footer-container">
-            <div class="footer-brand">
-                <h3>Isuru<span>Products</span></h3>
-                <p>Natural goodness for a healthy life.</p>
-            </div>
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#products">Products</a></li>
-                    <li><a href="#about">About</a></li>
-                </ul>
-            </div>
-            <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p><i class="ph ph-phone"></i> +94 7X XXX XXXX</p>
-                <p><i class="ph ph-envelope"></i> hello@isuruproducts.com</p>
-                <div class="social-links">
-                    <a href="#"><i class="ph ph-facebook-logo"></i></a>
-                    <a href="#"><i class="ph ph-instagram-logo"></i></a>
-                    <a href="#"><i class="ph ph-whatsapp-logo"></i></a>
+        <!-- Products Section -->
+        <section id="products" class="products-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Selection</span>
+                    <h2 class="split-text">The Collection</h2>
+                </div>
+
+                <div class="product-gallery" id="product-grid">
+                    <!-- Injected via JS -->
                 </div>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Isuru Products. All rights reserved.</p>
-        </div>
-    </footer>
+        </section>
+
+        <!-- Footer -->
+        <footer id="contact">
+            <div class="container">
+                <div class="footer-top">
+                    <h2>Connect</h2>
+                    <a href="https://wa.me/94771234567" class="footer-cta big-link">Say Hello <i
+                            class="ph ph-arrow-up-right"></i></a>
+                </div>
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <h4>Contact</h4>
+                        <p>+94 7X XXX XXXX</p>
+                        <p>hello@isuruproducts.com</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Social</h4>
+                        <div class="socials">
+                            <a href="#">Instagram</a>
+                            <a href="#">Facebook</a>
+                            <a href="#">WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Isuru Products.</p>
+                    <p>Designed with Intent.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
