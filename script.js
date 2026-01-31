@@ -1,39 +1,70 @@
 // Data
-const products = [
+const categories = [
     {
-        id: 1,
-        name: "Jackfruit",
-        category: "Dehydrated",
-        desc: "Premium quality naturally dried jackfruit. A pure, preservative-free vegan meat substitute perfect for curries.",
-        image: "images/jackfruit.png"
+        title: "Dehydrated Fruits",
+        desc: "Premium quality naturally dried fruits. No additives, just pure taste.",
+        products: [
+            {
+                id: 1,
+                name: "Jackfruit",
+                desc: "Premium quality naturally dried jackfruit. A pure, preservative-free vegan meat substitute perfect for curries.",
+                image: "images/jackfruit.png"
+            },
+            {
+                id: 2,
+                name: "Mango Slices",
+                desc: "Sweet and tangy dried mango slices. A perfect tropical snack rich in vitamins.",
+                image: "images/jackfruit.png"
+            }
+        ]
     },
     {
-        id: 2,
-        name: "Tropic Mix",
-        category: "Snacks",
-        desc: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
-        image: "images/jackfruit.png"
+        title: "Tropical Snacks",
+        desc: "Exotic blends of dehydrated fruits for energy on the go.",
+        products: [
+            {
+                id: 3,
+                name: "Tropic Mix",
+                desc: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
+                image: "images/jackfruit.png"
+            }
+        ]
     },
     {
-        id: 3,
-        name: "Kurakkan Flour",
-        category: "Grains",
-        desc: "100% pure finger millet flour. Rich in fiber and minerals, ideal for Rotti, Pittu, and healthy baking.",
-        image: "images/kurakkan.png"
+        title: "Grains & Flours",
+        desc: "Nutritious grains and flours for healthy traditional cooking.",
+        products: [
+            {
+                id: 4,
+                name: "Kurakkan Flour",
+                desc: "100% pure finger millet flour. Rich in fiber and minerals, ideal for Rotti, Pittu, and healthy baking.",
+                image: "images/kurakkan.png"
+            }
+        ]
     },
     {
-        id: 4,
-        name: "Ceylon Tea",
-        category: "Estate",
-        desc: "Hand-picked tea leaves from the misty hills of Sri Lanka. Experience the true aroma of Ceylon tea.",
-        image: "images/tea.png"
+        title: "Estate Teas",
+        desc: "Hand-picked tea leaves from the misty hills of Sri Lanka.",
+        products: [
+            {
+                id: 5,
+                name: "Ceylon Tea",
+                desc: "Hand-picked tea leaves from the misty hills of Sri Lanka. Experience the true aroma of Ceylon tea.",
+                image: "images/tea.png"
+            }
+        ]
     },
     {
-        id: 5,
-        name: "Rulan Aluwa",
-        category: "Sweets",
-        desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
-        image: "images/sweets.png"
+        title: "Traditional Sweets",
+        desc: "Authentic Sri Lankan festive delights.",
+        products: [
+            {
+                id: 6,
+                name: "Rulan Aluwa",
+                desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
+                image: "images/sweets.png"
+            }
+        ]
     }
 ];
 
@@ -73,32 +104,59 @@ function injectProducts() {
     const container = document.getElementById('product-stack');
     const phoneNumber = "94771234567";
     const alignments = ['align-left', 'align-center', 'align-right'];
+    let globalProductIndex = 0; // To keep track of total products for ID/Numbering if needed
 
-    products.forEach((product, index) => {
-        const alignClass = alignments[index % alignments.length]; // Cycle alignments
-        const section = document.createElement('section');
-        section.className = `product-section ${alignClass}`;
+    categories.forEach((category) => {
+        // 1. Create Category Header Section
+        const catSection = document.createElement('section');
+        catSection.className = 'category-header product-section align-center';
 
-        // Quote Message
-        const message = encodeURIComponent(`Hi, I'm interested in ordering ${product.name}.`);
-        const link = `https://wa.me/${phoneNumber}?text=${message}`;
-
-        section.innerHTML = `
-            <div class="product-bg">
-                <img src="${product.image}" alt="${product.name}" class="parallax-img">
+        // Using a similar structure to product-section to maintain the flow, 
+        // but with distinct styling for the category Title.
+        // We'll use a placeholder image or a solid color for the category bg for now.
+        catSection.innerHTML = `
+             <div class="product-bg" style="background: #0F1115;">
+                <!-- Optional: Category specific background image could go here -->
             </div>
-            <div class="product-card">
-                <span class="p-number">0${index + 1}</span>
-                <span class="p-cat">${product.category}</span>
-                <h2>${product.name}</h2>
-                <p class="p-desc">${product.desc}</p>
-                <a href="${link}" class="btn-whatsapp-full" target="_blank">
-                    Request Quote <i class="ph ph-whatsapp-logo"></i>
-                </a>
+            <div class="category-card">
+                <span class="cat-label">Category</span>
+                <h2>${category.title}</h2>
+                <p>${category.desc}</p>
+                 <div class="scroll-down" style="position: relative; bottom: auto; margin-top: 2rem; transform: none; left: auto;">
+                    <i class="ph ph-arrow-down"></i>
+                </div>
             </div>
         `;
+        container.appendChild(catSection);
 
-        container.appendChild(section);
+        // 2. iterate through products in this category
+        category.products.forEach((product) => {
+            const alignClass = alignments[globalProductIndex % alignments.length]; // Cycle alignments
+            const section = document.createElement('section');
+            section.className = `product-section ${alignClass}`;
+
+            // Quote Message
+            const message = encodeURIComponent(`Hi, I'm interested in ordering ${product.name} from the ${category.title} collection.`);
+            const link = `https://wa.me/${phoneNumber}?text=${message}`;
+
+            section.innerHTML = `
+                <div class="product-bg">
+                    <img src="${product.image}" alt="${product.name}" class="parallax-img">
+                </div>
+                <div class="product-card">
+                    <span class="p-number">0${globalProductIndex + 1}</span>
+                    <span class="p-cat">${category.title}</span>
+                    <h2>${product.name}</h2>
+                    <p class="p-desc">${product.desc}</p>
+                    <a href="${link}" class="btn-whatsapp-full" target="_blank">
+                        Request Quote <i class="ph ph-whatsapp-logo"></i>
+                    </a>
+                </div>
+            `;
+
+            container.appendChild(section);
+            globalProductIndex++;
+        });
     });
 }
 

@@ -238,6 +238,51 @@ img {
     /* Animated in */
 }
 
+/* Category Header */
+.category-header {
+    z-index: 20;
+    /* Higher than normal products */
+}
+
+.category-card {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 800px;
+    /* Wider than product card */
+    background: transparent;
+    /* Cleaner look for header */
+    text-align: center;
+    padding: 3rem;
+}
+
+.category-card h2 {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    /* Larger title */
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.category-card p {
+    font-size: 1.2rem;
+    opacity: 0.7;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cat-label {
+    display: inline-block;
+    color: var(--accent);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+}
+
 /* Alignment Classes */
 .align-left .product-card {
     margin-right: auto;
