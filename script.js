@@ -165,4 +165,9 @@ function initMenu() {
 
     trigger.addEventListener('click', toggle);
     close.addEventListener('click', toggle);
+
+    // Close menu when clicking a link
+    overlay.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', toggle);
+    });
 }
