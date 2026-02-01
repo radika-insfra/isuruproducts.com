@@ -234,11 +234,15 @@ img {
 } */
 
 .hero-logo {
-    width: 80px;
+    width: 220px;
     height: auto;
-    margin: 0 auto 1.5rem auto;
+    margin: 0 auto 2rem auto;
     display: block;
-    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
+    border-radius: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    filter: none;
+    /* Removed drop-shadow to use box-shadow with border */
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
