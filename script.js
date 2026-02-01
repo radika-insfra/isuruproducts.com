@@ -27,6 +27,12 @@ const categories = [
                 name: "Tropic Mix",
                 desc: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
                 image: "images/jackfruit.png"
+            },
+            {
+                id: 8,
+                name: "Golden Tropic",
+                desc: "A delightful mix of preserved tropical fruits in a jar. Taste the sunshine in every bite.",
+                image: "images/golden-tropic.png"
             }
         ]
     },
@@ -63,6 +69,18 @@ const categories = [
                 name: "Rulan Aluwa",
                 desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
                 image: "images/sweets.png"
+            }
+        ]
+    },
+    {
+        title: "Condiments & Jars",
+        desc: "Flavorful additions to your meals, preserved with care.",
+        products: [
+            {
+                id: 7,
+                name: "Natural Mango Chutney",
+                desc: "A perfect blend of sweet and spicy mango chutney, made from fresh mangoes. An ideal accompaniment for any meal.",
+                image: "images/mango-chutney.jpg"
             }
         ]
     }
