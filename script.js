@@ -80,7 +80,7 @@ const categories = [
                 id: 7,
                 name: "Natural Mango Chutney",
                 desc: "A perfect blend of sweet and spicy mango chutney, made from fresh mangoes. An ideal accompaniment for any meal.",
-                image: "images/mango-chutney.jpg"
+                image: "images/mango-chutney.png"
             }
         ]
     }
@@ -121,7 +121,7 @@ function initLenis() {
 function injectProducts() {
     const container = document.getElementById('product-stack');
     const phoneNumber = "94771234567";
-    const alignments = ['align-left', 'align-center', 'align-right'];
+    const alignments = ['align-left', 'align-right'];
     let globalProductIndex = 0; // To keep track of total products for ID/Numbering if needed
 
     categories.forEach((category) => {
