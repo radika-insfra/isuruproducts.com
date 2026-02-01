@@ -91,7 +91,7 @@ const categories = [
             {
                 id: 9,
                 name: "Natural Bee Honey",
-                desc: "100% pure wild bee honey, harvested from the forests. A natural sweetener with immense health benefits.",
+                desc: "Pure honey harvested from carefully maintained beehives. A natural sweetener known for its quality and goodness.",
                 image: "images/natural-honey.jpg"
             }
         ]
