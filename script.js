@@ -38,7 +38,13 @@ const categories = [
                 id: 4,
                 name: "Kurakkan Flour",
                 desc: "100% pure finger millet flour. Rich in fiber and minerals, ideal for Rotti, Pittu, and healthy baking.",
-                image: "images/kurakkan-powder.jpg"
+                image: "images/kurakkan-powder.png"
+            },
+            {
+                id: 12,
+                name: "Kithul Powder",
+                desc: "Pure nutritious starch from the Kithul palm. Known for its cooling properties and distinct flavor in traditional desserts.",
+                image: "images/kithul-powder.png"
             }
         ]
     },
@@ -54,18 +60,18 @@ const categories = [
             }
         ]
     },
-    {
-        title: "Traditional Sweets",
-        desc: "Authentic Sri Lankan festive delights.",
-        products: [
-            {
-                id: 6,
-                name: "Rulan Aluwa",
-                desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
-                image: "images/sweets.png"
-            }
-        ]
-    },
+    // {
+    //     title: "Traditional Sweets",
+    //     desc: "Authentic Sri Lankan festive delights.",
+    //     products: [
+    //         {
+    //             id: 6,
+    //             name: "Rulan Aluwa",
+    //             desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
+    //             image: "images/sweets.png"
+    //         }
+    //     ]
+    // },
     {
         title: "Condiments & Jars",
         desc: "Flavorful additions to your meals, preserved with care.",
@@ -85,7 +91,7 @@ const categories = [
             {
                 id: 9,
                 name: "Natural Bee Honey",
-                desc: "100% pure wild bee honey, harvested from the forests. A natural sweetener with immense health benefits.",
+                desc: "Pure honey harvested from carefully maintained beehives. A natural sweetener known for its quality and goodness.",
                 image: "images/natural-honey.jpg"
             }
         ]
@@ -126,7 +132,7 @@ function initLenis() {
 // 2. Inject Products (Sticky Stack Structure)
 function injectProducts() {
     const container = document.getElementById('product-stack');
-    const phoneNumber = "94771234567";
+    const phoneNumber = "94742514538";
     const alignments = ['align-left', 'align-right'];
     let globalProductIndex = 0; // To keep track of total products for ID/Numbering if needed
 
