@@ -60,18 +60,18 @@ const categories = [
             }
         ]
     },
-    {
-        title: "Traditional Sweets",
-        desc: "Authentic Sri Lankan festive delights.",
-        products: [
-            {
-                id: 6,
-                name: "Rulan Aluwa",
-                desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
-                image: "images/sweets.png"
-            }
-        ]
-    },
+    // {
+    //     title: "Traditional Sweets",
+    //     desc: "Authentic Sri Lankan festive delights.",
+    //     products: [
+    //         {
+    //             id: 6,
+    //             name: "Rulan Aluwa",
+    //             desc: "Authentic Sri Lankan semolina sweets made with ghee and cashews. A festive delight for special occasions.",
+    //             image: "images/sweets.png"
+    //         }
+    //     ]
+    // },
     {
         title: "Condiments & Jars",
         desc: "Flavorful additions to your meals, preserved with care.",
