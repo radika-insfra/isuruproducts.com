@@ -38,7 +38,13 @@ const categories = [
                 id: 4,
                 name: "Kurakkan Flour",
                 desc: "100% pure finger millet flour. Rich in fiber and minerals, ideal for Rotti, Pittu, and healthy baking.",
-                image: "images/kurakkan-powder.jpg"
+                image: "images/kurakkan-powder.png"
+            },
+            {
+                id: 12,
+                name: "Kithul Powder",
+                desc: "Pure nutritious starch from the Kithul palm. Known for its cooling properties and distinct flavor in traditional desserts.",
+                image: "images/kithul-powder.png"
             }
         ]
     },
@@ -126,7 +132,7 @@ function initLenis() {
 // 2. Inject Products (Sticky Stack Structure)
 function injectProducts() {
     const container = document.getElementById('product-stack');
-    const phoneNumber = "94771234567";
+    const phoneNumber = "94742514538";
     const alignments = ['align-left', 'align-right'];
     let globalProductIndex = 0; // To keep track of total products for ID/Numbering if needed
 
