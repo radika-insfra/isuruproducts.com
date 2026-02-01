@@ -8,13 +8,13 @@ const categories = [
                 id: 1,
                 name: "Jackfruit",
                 desc: "Premium quality naturally dried jackfruit. A pure, preservative-free vegan meat substitute perfect for curries.",
-                image: "images/jackfruit.png"
+                image: "images/dehydrated-jackfruit.jpg"
             },
             {
-                id: 2,
-                name: "Mango Slices",
-                desc: "Sweet and tangy dried mango slices. A perfect tropical snack rich in vitamins.",
-                image: "images/jackfruit.png"
+                id: 10,
+                name: "Dehydrated Breadfruit",
+                desc: "Naturally dried breadfruit slices. A versatile, starchy staple perfect for frying or curries.",
+                image: "images/dehydrated-breadfruit.jpg"
             }
         ]
     },
@@ -22,12 +22,6 @@ const categories = [
         title: "Tropical Snacks",
         desc: "Exotic blends of dehydrated fruits for energy on the go.",
         products: [
-            {
-                id: 3,
-                name: "Tropic Mix",
-                desc: "An exotic blend of dehydrated tropical fruits. A perfect nutritious snack for energy on the go.",
-                image: "images/jackfruit.png"
-            },
             {
                 id: 8,
                 name: "Golden Tropic",
@@ -44,7 +38,7 @@ const categories = [
                 id: 4,
                 name: "Kurakkan Flour",
                 desc: "100% pure finger millet flour. Rich in fiber and minerals, ideal for Rotti, Pittu, and healthy baking.",
-                image: "images/kurakkan.png"
+                image: "images/kurakkan-powder.jpg"
             }
         ]
     },
@@ -81,6 +75,18 @@ const categories = [
                 name: "Natural Mango Chutney",
                 desc: "A perfect blend of sweet and spicy mango chutney, made from fresh mangoes. An ideal accompaniment for any meal.",
                 image: "images/mango-chutney.png"
+            }
+        ]
+    },
+    {
+        title: "Natural Sweeteners",
+        desc: "Nature's purest sugar alternatives for a healthier lifestyle.",
+        products: [
+            {
+                id: 9,
+                name: "Natural Bee Honey",
+                desc: "100% pure wild bee honey, harvested from the forests. A natural sweetener with immense health benefits.",
+                image: "images/natural-honey.jpg"
             }
         ]
     }
