@@ -140,21 +140,18 @@ function injectProducts() {
         // 1. Create Category Header Section
         const catSection = document.createElement('section');
         catSection.className = 'category-header product-section align-center';
+        catSection.dataset.category = category.title; // For HUD tracking
 
-        // Using a similar structure to product-section to maintain the flow, 
-        // but with distinct styling for the category Title.
-        // We'll use a placeholder image or a solid color for the category bg for now.
         catSection.innerHTML = `
-             <div class="product-bg" style="background: #0F1115;">
-                <!-- Optional: Category specific background image could go here -->
+             <div class="product-bg" style="background: var(--bg-dark);">
+                <div class="luxury-grid"></div>
             </div>
             <div class="category-card">
-                <span class="cat-label">Category</span>
+                <div class="luxury-flourish"></div>
+                <span class="cat-label">Collection</span>
                 <h2>${category.title}</h2>
+                <div class="luxury-separator"></div>
                 <p>${category.desc}</p>
-                 <div class="scroll-down" style="position: relative; bottom: auto; margin-top: 2rem; transform: none; left: auto;">
-                    <i class="ph ph-arrow-down"></i>
-                </div>
             </div>
         `;
         container.appendChild(catSection);
@@ -164,6 +161,7 @@ function injectProducts() {
             const alignClass = alignments[globalProductIndex % alignments.length]; // Cycle alignments
             const section = document.createElement('section');
             section.className = `product-section ${alignClass}`;
+            section.dataset.category = category.title; // For HUD tracking
 
             // Quote Message
             const message = encodeURIComponent(`Hi, I'm interested in ordering ${product.name} from the ${category.title} collection.`);
@@ -208,37 +206,112 @@ function initAnimations() {
 
     // Product Section Animations
     const sections = document.querySelectorAll('.product-section');
-    sections.forEach((section) => {
 
-        // Image Parallax (Background moves slower)
+    sections.forEach((section, i) => {
+        // 1. Section Pinning (The "Slide Over" effect)
+        // We pin each section as it reaches the top, and the next one slides over it.
+        ScrollTrigger.create({
+            trigger: section,
+            start: "top top",
+            pin: true,
+            pinSpacing: false, // This makes the NEXT section slide OVER the pinned one
+            anticipatePin: 1
+        });
+
+        // Set z-index so later sections are "above" earlier ones
+        gsap.set(section, { zIndex: i + 1 });
+
+        // 2. Image Parallax Restoration
         const bgImg = section.querySelector('.parallax-img');
-        gsap.fromTo(bgImg,
-            { yPercent: -10, scale: 1.1 },
-            {
-                yPercent: 10,
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
+        if (bgImg) {
+            gsap.fromTo(bgImg,
+                { yPercent: -15, scale: 1.1 },
+                {
+                    yPercent: 15,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                }
+            );
+        }
+
+        // 3. Content Card Reveal & HUD Update
+        const card = section.querySelector('.product-card');
+        const hudName = document.querySelector('.hud-name');
+
+        ScrollTrigger.create({
+            trigger: section,
+            start: "top 30%", // Wait until more of the section is visible
+            end: "bottom 30%",
+            onEnter: () => {
+                if (section.dataset.category && hudName.textContent !== section.dataset.category) {
+                    gsap.to(hudName, {
+                        opacity: 0,
+                        y: -10,
+                        duration: 0.3,
+                        onComplete: () => {
+                            hudName.textContent = section.dataset.category;
+                            gsap.to(hudName, { opacity: 1, y: 0, duration: 0.3 });
+                        }
+                    });
+                }
+            },
+            onEnterBack: () => {
+                if (section.dataset.category && hudName.textContent !== section.dataset.category) {
+                    gsap.to(hudName, {
+                        opacity: 0,
+                        y: 10,
+                        duration: 0.3,
+                        onComplete: () => {
+                            hudName.textContent = section.dataset.category;
+                            gsap.to(hudName, { opacity: 1, y: 0, duration: 0.3 });
+                        }
+                    });
                 }
             }
-        );
-
-        // Content Card Reveal (Slide up + Fade)
-        const card = section.querySelector('.product-card');
-        gsap.to(card, {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: section,
-                start: "top 60%", // Trigger when section is 60% up viewport
-                toggleActions: "play none none reverse"
-            }
         });
+
+        if (card) {
+            gsap.to(card, {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 1.5,
+                ease: "expo.out",
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+        }
     });
+
+    // Luxury HUD Visibility (Hide in Hero and Footer)
+    ScrollTrigger.create({
+        trigger: ".hero-section",
+        start: "top top",
+        end: "bottom 30%", // Hide earlier
+        onEnterBack: () => gsap.to(".category-hud", { opacity: 0, y: -20, duration: 0.4, ease: "power2.inOut" }),
+        onLeave: () => gsap.to(".category-hud", { opacity: 1, y: 0, duration: 0.4, ease: "power2.inOut" })
+    });
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+        ScrollTrigger.create({
+            trigger: footer,
+            start: "top 95%", // Hide almost immediately when footer enters
+            onEnter: () => gsap.to(".category-hud", { opacity: 0, y: -20, duration: 0.4, ease: "power2.inOut" }),
+            onLeaveBack: () => gsap.to(".category-hud", { opacity: 1, y: 0, duration: 0.4, ease: "power2.inOut" })
+        });
+    }
+
+    // Initial State for HUD - Absolutely Hidden
+    gsap.set(".category-hud", { opacity: 0, y: -20 });
 }
 
 // 4. Menu Logic
